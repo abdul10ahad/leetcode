@@ -1,0 +1,32 @@
+/**
+ * Question Link: https://leetcode.com/problems/longest-palindromic-substring/
+ */
+
+class Solution {
+    func longestPalindrome(_ s: String) -> String {
+        let chars = Array(s)
+        var start = 0
+        var maxLength = 0
+
+        func expandAroundCenter(_ left: Int, _ right: Int) {
+            var l = left
+            var r = right
+            while l >= 0 && r < chars.count && chars[l] == chars[r] {
+                l -= 1
+                r += 1
+            }
+            let length = r - l - 1
+            if length > maxLength {
+                maxLength = length
+                start = l + 1
+            }
+        }
+
+        for i in 0..<chars.count {
+            expandAroundCenter(i, i)       // odd-length palindromes, center = i
+            expandAroundCenter(i, i + 1)   // even-length palindromes, center = i / i+1
+        }
+
+        return String(chars[start..<(start + maxLength)])
+    }
+}
