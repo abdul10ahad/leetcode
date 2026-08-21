@@ -34,4 +34,18 @@ class ValidAnagram {
         // if both guards succeed, then we have an anagram
         return true
     }
+
+    /// Modern-Swift version: builds a [Character: Int] frequency map for each
+    /// string using `Dictionary(grouping:by:)` + `mapValues`, then relies on
+    /// Dictionary's built-in `Equatable` conformance to compare them in one line.
+    /// Time: O(n)  Space: O(k) where k = number of distinct characters.
+    func isAnagramModern(_ s: String, _ t: String) -> Bool {
+        guard s.count == t.count else { return false }
+
+        func frequencyMap(_ str: String) -> [Character: Int] {
+            Dictionary(grouping: str, by: { $0 }).mapValues(\.count)
+        }
+
+        return frequencyMap(s) == frequencyMap(t)
+    }
 }
