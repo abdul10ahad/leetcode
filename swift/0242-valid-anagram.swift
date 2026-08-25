@@ -24,14 +24,29 @@ class ValidAnagram {
     }
     
     func isAnagramByLengthAndSortCheck(_ s: String, _ t: String) -> Bool {
-        
+
         // if the String lengths don't match, then they cannot be anagrams of each other
         guard s.count == t.count else { return false }
-        
+
         // sorting the String Characters puts them in the same order, which allows us to check equality
         guard s.sorted() == t.sorted() else { return false }
-        
+
         // if both guards succeed, then we have an anagram
         return true
+    }
+
+    /// Modern Swift, single reduce: build the frequency table from `s`,
+    /// then fold `t` back over it, decrementing. If `t` is a true anagram
+    /// every count lands back on zero.
+    func isAnagramModern(_ s: String, _ t: String) -> Bool {
+        guard s.count == t.count else { return false }
+
+        let counts = s.reduce(into: [Character: Int]()) { counts, char in
+            counts[char, default: 0] += 1
+        }
+
+        return t.reduce(into: counts) { counts, char in
+            counts[char, default: 0] -= 1
+        }.values.allSatisfy { $0 == 0 }
     }
 }
